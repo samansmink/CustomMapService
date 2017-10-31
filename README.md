@@ -1,5 +1,5 @@
 ## How to use
-- install LimeSurvey 
+- install LimeSurvey 2.72.3 or higher
 - copy CustomMapService folder to LimeSurvey plugins folder
 - go to LimeSurvey admin panel -> configuration -> plugin manager
 - configure this plugin to use the XYZ url of your running openmaptiles instance
