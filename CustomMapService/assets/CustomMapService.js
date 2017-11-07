@@ -48,7 +48,7 @@ function OpenMapTilesInitialize(question,latLng){
         return;
     }
 
-    var mapOSM = L.tileLayer(window.CustomMapServiceUrl, {
+    var mapOSM = L.tileLayer(currentProtocol + "//" + window.CustomMapServiceUrl, {
         maxZoom: 19,
         subdomains: ["a", "b", "c"],
         attribution: 'Map data © <a href="http://www.openstreetmap.org/" target="_blank">OpenStreetMap</a> contributors, CC-BY-SA.'
@@ -174,6 +174,62 @@ function OpenMapTilesInitialize(question,latLng){
 
     function isNumber(n){
         return !isNaN(parseFloat(n)) && isFinite(n);
+    }
+
+    if (window.CustomNominatimServiceUrl != null && window.CustomNominatimServiceUrl != "") {
+        $("#searchbox_" + name).autocomplete({
+            appendTo: $("#searchbox_" + name).parent(),
+            minLength: 3,
+            select: function(event, ui) {
+                if (ui.item.source == "OpenStreetmap/Nominatim") {
+                    console.log(ui.item);
+                    map.setView([ui.item.lat, ui.item.lng], 13);
+                    marker.setLatLng([ui.item.lat, ui.item.lng]);
+                    UI_update(ui.item.lat, ui.item.lng);
+                }
+            },
+            open: function() {
+                $(this).addClass("searching");
+            },
+            close: function() {
+                $(this).removeClass("searching");
+            },
+            source: function(request, response) {
+                $.ajax({
+                    url: currentProtocol + "//" + window.CustomNominatimServiceUrl + "/search",
+                    dataType: "json",
+                    data: {
+                        format: 'json',
+                        limit: 5,
+                        'accept-language': LSmap.geonameLang,
+                        q: request.term
+                    },
+                    beforeSend: function(jqXHR, settings) {
+                        if ($("#restrictToExtent_" + name).prop('checked')) {
+                            settings.url += "&east=" + map.getBounds().getEast() + "&west=" + map.getBounds().getWest() + "&north=" + map.getBounds().getNorth() + "&south=" + map.getBounds().getSouth();
+                        }
+                    },
+                    success: function(data) {
+                        var responses = $.map(data, function(item) {
+                            return {
+                                label: item.display_name,
+                                lat: item.lat,
+                                lng: item.lon,
+                                source: "OpenStreetmap/Nominatim"
+                            };
+                        })
+                        response(responses);
+                    }
+                });
+            }
+        });
+        $("#searchbox_" + name).on('keydown', function(e) {
+            if (e.keyCode == 13) {
+                e.preventDefault();
+
+                return false;
+            }
+        })
     }
 
     var mapQuestion = $('#question'+name.split('X')[2]);

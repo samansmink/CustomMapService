@@ -16,9 +16,14 @@ class CustomMapService extends PluginBase {
     static protected $description = 'Enables configuring any traditional raster (Mercator XYZ) map server.';
     
     protected $settings = array(
-        'url' => array(
+
+        'openmaptiles_url' => array(
             'type' => 'string',
-            'label' => 'Map server url (Mercator XYZ format: http:// ... {z}/{x}/{y}.png)'
+            'label' => 'Map server url (Mercator XYZ format: ... {z}/{x}/{y}.png)'
+        ),
+        'nominatim_url' => array(
+            'type' => 'string',
+            'label' => 'Map server url (example: 192.168.99.100:32769)'
         )
     );
     
@@ -31,7 +36,7 @@ class CustomMapService extends PluginBase {
          */
         $this->subscribe('beforeQuestionRender', 'replaceMapDiv');
         $this->subscribe('beforeQuestionRender', 'loadJs');
-        $this->subscribe('beforeQuestionRender', 'setUrl');
+        $this->subscribe('beforeQuestionRender', 'setUrls');
     }
 
     public function replaceMapDiv() {
@@ -51,12 +56,14 @@ class CustomMapService extends PluginBase {
         Yii::app()->clientScript->registerScriptFile($assetUrl.'/CustomMapService.js');
     }
 
-    public function setUrl() {
+    public function setUrls() {
 
-        $url = $this->get('url');
+        $mapUrl = $this->get('openmaptiles_url');
+        $nomUrl = $this->get('nominatim_url');
 
         print "<script type=\"text/javascript\">";
-        print "window.CustomMapServiceUrl = \"$url\";";
+        print "window.CustomMapServiceUrl = \"$mapUrl\";";
+        print "window.CustomNominatimServiceUrl = \"$nomUrl\";";
         print "</script>";
     }
 }
