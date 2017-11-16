@@ -30,14 +30,6 @@ class CustomMapService extends PluginBase
         'default_zoom_override'       => array(
             'type'  => 'int',
             'label' => 'Override the default zoom level'
-        ),
-        'default_start_lat_override'  => array(
-            'type'  => 'float',
-            'label' => 'Override the default start latitude'
-        ),
-        'default_start_long_override' => array(
-            'type'  => 'float',
-            'label' => 'Override the default start longitude'
         )
     );
 
@@ -88,15 +80,11 @@ class CustomMapService extends PluginBase
         $mapUrl      = $this->get('openmaptiles_url');
         $nomUrl      = $this->get('nominatim_url');
         $defaultZoom = $this->get('default_zoom_override');
-        $defaultLat  = $this->get('default_start_lat_override');
-        $defaultLong = $this->get('default_start_long_override');
 
         print "<script type=\"text/javascript\">";
         print "window.CustomMapServiceUrl = \"$mapUrl\";";
         print "window.CustomNominatimServiceUrl = \"$nomUrl\";";
         print "window.DefaultZoom = $defaultZoom;";
-        print "window.DefaultLong = $defaultLong;";
-        print "window.DefaultLat = $defaultLat;";
         print "</script>";
     }
 }

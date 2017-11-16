@@ -61,15 +61,7 @@ function OpenMapTilesInitialize(question,latLng){
     }
 
     if (window.DefaultZoom == null || isNaN(window.DefaultZoom)) {
-        window.DefaultZoom = 13; // hardcoded value retrieved from original limesurvey code
-    }
-
-    if (window.DefaultLat == null || isNaN(window.DefaultLat)) {
-        window.DefaultLat = MapOption.latitude;
-    }
-
-    if (window.DefaultLong == null || isNaN(window.DefaultLong)) {
-        window.DefaultLong = MapOption.longitude;
+        window.DefaultZoom = 13; // hardcoded value retrieved from original limesurvey codet
     }
 
     var mapOSM = L.tileLayer(currentProtocol + "//" + window.CustomMapServiceUrl, {
@@ -86,7 +78,7 @@ function OpenMapTilesInitialize(question,latLng){
     var map = L.map("map_"+name, {
         zoom:MapOption.zoomLevel,
         minZoom:1,
-        center: [window.DefaultLat, window.DefaultLong] ,
+        center: [MapOption.latitude, MapOption.longitude] ,
         maxBounds: ([[-90, -180],[90, 180]]),
         layers: [mapOSM]
     });
