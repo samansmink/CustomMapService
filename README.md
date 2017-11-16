@@ -7,7 +7,7 @@
 - enable plugin
 
 ## How it works?
-It simply replaces the existing OSM initialization. Note that during question creation you wil not be shown this option, but instead the OSM by MapBox option should be selected for compatibility with this plugin.
+It simply replaces the existing OSM initialization. Note that during question creation you wil not be shown this plugin as an option, but instead the OSM by MapBox option should be selected.
 
 ## Licence
 Plugin is licenced under the [GPL 2.0](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html).
