@@ -16,7 +16,13 @@ $(document).ready(function()
         var latLng = coordinates.split(" ");
         var question_id = question.substr(0,question.length-2);
 
-        if ($("#mapservice_custommapservice_"+question_id).val() > 0){
+        if ($("#mapservice_"+question_id).val()==1){
+            // Google Maps
+            if (gmaps[''+question] == undefined) {
+                osmaps[''+question] = OpenMapTilesInitialize(question,latLng);
+            }
+        }
+        else if ($("#mapservice_"+question_id).val()==100){
             //  Maps
             if (osmaps[''+question] == undefined) {
                 osmaps[''+question] = OpenMapTilesInitialize(question,latLng);
@@ -28,7 +34,12 @@ $(document).ready(function()
 
 /*
  * This function is copied from the LimeSurvey(2.72.3+171020) map.js function OSGeoInitialize
- * The four layers were reduced to 1 and the url was changed to a custom, configurable url.
+ * The four layers were reduced to 1 and two urls were changed to a custom configurable url.
+ *
+ * The geocoding url is set through window.CustomNominatimServiceUrl
+ * The mapping service url is set through window.CustomMapServiceUrl
+ *
+ *
  */
 function OpenMapTilesInitialize(question,latLng){
     var currentProtocol = location.protocol
@@ -109,7 +120,7 @@ function OpenMapTilesInitialize(question,latLng){
         }
     )
 
-    // Zoom to 11 when switching to Aerial or Hybrid views - bug 10589
+    // Zoom to 17 when switching to Aerial or Hybrid views - bug 10589
     var layer2Name, layer3Name, layerIndex = 0;
     for (var key in baseLayers) {
         if (!baseLayers.hasOwnProperty(key)) {
@@ -125,7 +136,7 @@ function OpenMapTilesInitialize(question,latLng){
     }
     map.on('baselayerchange', function(e) {
         if(e.name == layer2Name || e.name == layer3Name) {
-            map.setZoom(11);
+            map.setZoom(17);
         }
     });
 

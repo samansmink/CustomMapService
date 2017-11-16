@@ -19,11 +19,11 @@ class CustomMapService extends PluginBase {
 
         'openmaptiles_url' => array(
             'type' => 'string',
-            'label' => 'Map server url (Mercator XYZ format: ... {z}/{x}/{y}.png)'
+            'label' => 'Map server url (Mercator XYZ format: ... {z}/{x}/{y}.png). NOTE: dont include http(s):// prefix'
         ),
         'nominatim_url' => array(
             'type' => 'string',
-            'label' => 'Map server url (example: 192.168.99.100:32769)'
+            'label' => 'Map server url (example: 192.168.99.100:32769) NOTE: dont include http(s):// prefix'
         )
     );
     
@@ -32,13 +32,16 @@ class CustomMapService extends PluginBase {
         
         
         /**
-         * Here you should handle subscribing to the events your plugin will handle
+         * Subscribe functions to limesurvey events
          */
         $this->subscribe('beforeQuestionRender', 'replaceMapDiv');
         $this->subscribe('beforeQuestionRender', 'loadJs');
         $this->subscribe('beforeQuestionRender', 'setUrls');
     }
 
+    /*
+     * Replace the map div class with our custom class
+     */
     public function replaceMapDiv() {
 
         $event = $this->event;
@@ -50,12 +53,18 @@ class CustomMapService extends PluginBase {
         $event->set('answers', $correctedHtml);
     }
 
+    /*
+     * Load custom map.js file
+     */
     public function loadJs() {
 
         $assetUrl=Yii::app()->assetManager->publish(dirname(__FILE__) . '/assets/');
         Yii::app()->clientScript->registerScriptFile($assetUrl.'/CustomMapService.js');
     }
 
+    /*
+     * Set custom urls as window variables so that they can be accessed from JS.
+     */
     public function setUrls() {
 
         $mapUrl = $this->get('openmaptiles_url');
