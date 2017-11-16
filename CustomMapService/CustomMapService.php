@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Custom Map Service Plugin
  *
@@ -9,28 +10,42 @@
  * This file contains the configuration for the plugin.
  */
 
-class CustomMapService extends PluginBase {
+class CustomMapService extends PluginBase
+{
 
     protected $storage = 'DbStorage';
     static protected $name = 'CustomMapService';
     static protected $description = 'Enables configuring any traditional raster (Mercator XYZ) map server.';
-    
+
     protected $settings = array(
 
-        'openmaptiles_url' => array(
-            'type' => 'string',
+        'openmaptiles_url'            => array(
+            'type'  => 'string',
             'label' => 'Map server url (Mercator XYZ format: ... {z}/{x}/{y}.png). NOTE: dont include http(s):// prefix'
         ),
-        'nominatim_url' => array(
-            'type' => 'string',
+        'nominatim_url'               => array(
+            'type'  => 'string',
             'label' => 'Map server url (example: 192.168.99.100:32769) NOTE: dont include http(s):// prefix'
+        ),
+        'default_zoom_override'       => array(
+            'type'  => 'int',
+            'label' => 'Override the default zoom level'
+        ),
+        'default_start_lat_override'  => array(
+            'type'  => 'float',
+            'label' => 'Override the default start latitude'
+        ),
+        'default_start_long_override' => array(
+            'type'  => 'float',
+            'label' => 'Override the default start longitude'
         )
     );
-    
-    public function __construct(PluginManager $manager, $id) {
+
+    public function __construct(PluginManager $manager, $id)
+    {
         parent::__construct($manager, $id);
-        
-        
+
+
         /**
          * Subscribe functions to limesurvey events
          */
@@ -42,13 +57,14 @@ class CustomMapService extends PluginBase {
     /*
      * Replace the map div class with our custom class
      */
-    public function replaceMapDiv() {
+    public function replaceMapDiv()
+    {
 
         $event = $this->event;
 
         $answerHtml = $event->get('answers');
 
-        $correctedHtml = str_replace ( "mapservice_", 'mapservice_custommapservice_' , $answerHtml);
+        $correctedHtml = str_replace("mapservice_", 'mapservice_custommapservice_', $answerHtml);
 
         $event->set('answers', $correctedHtml);
     }
@@ -56,23 +72,31 @@ class CustomMapService extends PluginBase {
     /*
      * Load custom map.js file
      */
-    public function loadJs() {
+    public function loadJs()
+    {
 
-        $assetUrl=Yii::app()->assetManager->publish(dirname(__FILE__) . '/assets/');
-        Yii::app()->clientScript->registerScriptFile($assetUrl.'/CustomMapService.js');
+        $assetUrl = Yii::app()->assetManager->publish(dirname(__FILE__) . '/assets/');
+        Yii::app()->clientScript->registerScriptFile($assetUrl . '/CustomMapService.js');
     }
 
     /*
      * Set custom urls as window variables so that they can be accessed from JS.
      */
-    public function setUrls() {
+    public function setUrls()
+    {
 
-        $mapUrl = $this->get('openmaptiles_url');
-        $nomUrl = $this->get('nominatim_url');
+        $mapUrl      = $this->get('openmaptiles_url');
+        $nomUrl      = $this->get('nominatim_url');
+        $defaultZoom = $this->get('default_zoom_override');
+        $defaultLat  = $this->get('default_start_lat_override');
+        $defaultLong = $this->get('default_start_long_override');
 
         print "<script type=\"text/javascript\">";
         print "window.CustomMapServiceUrl = \"$mapUrl\";";
         print "window.CustomNominatimServiceUrl = \"$nomUrl\";";
+        print "window.DefaultZoom = $defaultZoom;";
+        print "window.DefaultLong = $defaultLong;";
+        print "window.DefaultLat = $defaultLat;";
         print "</script>";
     }
 }

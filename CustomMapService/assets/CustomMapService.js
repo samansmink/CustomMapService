@@ -16,14 +16,15 @@ $(document).ready(function()
         var latLng = coordinates.split(" ");
         var question_id = question.substr(0,question.length-2);
 
-        if ($("#mapservice_"+question_id).val()==1){
-            // Google Maps
+        if ($("#mapservice_custommapservice_"+question_id).val()==1){
+
             if (gmaps[''+question] == undefined) {
-                osmaps[''+question] = OpenMapTilesInitialize(question,latLng);
+                alert("CustomMapService plugin only supports OSM type questions.");
             }
         }
-        else if ($("#mapservice_"+question_id).val()==100){
+        else if ($("#mapservice_custommapservice_"+question_id).val()==100){
             //  Maps
+            console.log('OSMmaps');
             if (osmaps[''+question] == undefined) {
                 osmaps[''+question] = OpenMapTilesInitialize(question,latLng);
             }
@@ -59,6 +60,18 @@ function OpenMapTilesInitialize(question,latLng){
         return;
     }
 
+    if (window.DefaultZoom == null || isNaN(window.DefaultZoom)) {
+        window.DefaultZoom = MapOption.zoomLevel;
+    }
+
+    if (window.DefaultLat == null || isNaN(window.DefaultLat)) {
+        window.DefaultLat = MapOption.latitude;
+    }
+
+    if (window.DefaultLong == null || isNaN(window.DefaultLong)) {
+        window.DefaultLong = MapOption.longitude;
+    }
+
     var mapOSM = L.tileLayer(currentProtocol + "//" + window.CustomMapServiceUrl, {
         maxZoom: 19,
         subdomains: ["a", "b", "c"],
@@ -71,9 +84,9 @@ function OpenMapTilesInitialize(question,latLng){
     var overlays = {
     };
     var map = L.map("map_"+name, {
-        zoom:MapOption.zoomLevel,
+        zoom:window.DefaultZoom,
         minZoom:1,
-        center: [MapOption.latitude, MapOption.longitude] ,
+        center: [window.DefaultLat, window.DefaultLong] ,
         maxBounds: ([[-90, -180],[90, 180]]),
         layers: [mapOSM]
     });
@@ -136,7 +149,7 @@ function OpenMapTilesInitialize(question,latLng){
     }
     map.on('baselayerchange', function(e) {
         if(e.name == layer2Name || e.name == layer3Name) {
-            map.setZoom(17);
+            map.setZoom( window.DefaultZoom);
         }
     });
 
