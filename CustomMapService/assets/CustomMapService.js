@@ -61,7 +61,7 @@ function OpenMapTilesInitialize(question,latLng){
     }
 
     if (window.DefaultZoom == null || isNaN(window.DefaultZoom)) {
-        window.DefaultZoom = MapOption.zoomLevel;
+        window.DefaultZoom = 13; // hardcoded value retrieved from original limesurvey code
     }
 
     if (window.DefaultLat == null || isNaN(window.DefaultLat)) {
@@ -84,7 +84,7 @@ function OpenMapTilesInitialize(question,latLng){
     var overlays = {
     };
     var map = L.map("map_"+name, {
-        zoom:window.DefaultZoom,
+        zoom:MapOption.zoomLevel,
         minZoom:1,
         center: [window.DefaultLat, window.DefaultLong] ,
         maxBounds: ([[-90, -180],[90, 180]]),
@@ -149,7 +149,7 @@ function OpenMapTilesInitialize(question,latLng){
     }
     map.on('baselayerchange', function(e) {
         if(e.name == layer2Name || e.name == layer3Name) {
-            map.setZoom( window.DefaultZoom);
+            map.setZoom(11);
         }
     });
 
@@ -207,7 +207,7 @@ function OpenMapTilesInitialize(question,latLng){
             select: function(event, ui) {
                 if (ui.item.source == "OpenStreetmap/Nominatim") {
                     console.log(ui.item);
-                    map.setView([ui.item.lat, ui.item.lng], 13);
+                    map.setView([ui.item.lat, ui.item.lng], window.DefaultZoom);
                     marker.setLatLng([ui.item.lat, ui.item.lng]);
                     UI_update(ui.item.lat, ui.item.lng);
                 }

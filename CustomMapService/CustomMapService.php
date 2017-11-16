@@ -21,11 +21,11 @@ class CustomMapService extends PluginBase
 
         'openmaptiles_url'            => array(
             'type'  => 'string',
-            'label' => 'Map server url (Mercator XYZ format: ... {z}/{x}/{y}.png). NOTE: dont include http(s):// prefix'
+            'label' => 'Map server url (in Mercator XYZ format: ... {z}/{x}/{y}.png). NOTE: dont include http(s):// prefix'
         ),
         'nominatim_url'               => array(
             'type'  => 'string',
-            'label' => 'Map server url (example: 192.168.99.100:32769) NOTE: dont include http(s):// prefix'
+            'label' => 'Nominatim server url. NOTE: dont include http(s):// prefix'
         ),
         'default_zoom_override'       => array(
             'type'  => 'int',
