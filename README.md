@@ -1,3 +1,6 @@
+## About
+This project was created for the Stichting Studiecentrum Criminaliteit en Rechtshandhaving (NSCR). It was created to be able to use a local Nominatim server to be able to use LimeSurvey with OpenStreetMap without the need for an Internet connection
+
 ## How to use
 - install LimeSurvey 2.72.3 or higher
 - copy CustomMapService folder to LimeSurvey plugins folder
